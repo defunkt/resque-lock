@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = "resque-lock"
-  s.version           = "0.1.0"
+  s.version           = "0.1.1"
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "A Resque plugin for ensuring only one instance of your job is running at a time."
   s.homepage          = "http://github.com/defunkt/resque-lock"
