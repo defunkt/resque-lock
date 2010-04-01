@@ -49,8 +49,8 @@ module Resque
       end
 
       # Convenience method, not used internally.
-      def locked?
-        Resque.redis.exist(lock)
+      def locked?(*args)
+        Resque.redis.exist(lock(*args))
       end
 
       # Where the magic happens.
