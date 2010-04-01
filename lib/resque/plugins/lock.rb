@@ -5,6 +5,8 @@ module Resque
     #
     # For example:
     #
+    # require 'resque/plugins/lock'
+    #
     # class UpdateNetworkGraph
     #   extend Resque::Plugins::Lock
     #
