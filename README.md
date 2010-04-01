@@ -1,8 +1,11 @@
 Resque Lock
 ===========
 
-A [Resque][rq] plugin. If you want only one instance of your job
-running at a time, extend it with this module.
+A [Resque][rq] plugin. Requires Resque 1.7.0.
+
+If you want only one instance of your job running at a time, extend it
+with this module.
+
 
 For example:
 
@@ -41,11 +44,5 @@ The above modification will ensure only one job of class
 UpdateNetworkGraph is running at a time, regardless of the
 repo_id. Normally a job is locked using a combination of its
 class name and arguments.
-
-
-Dependencies
-------------
-
-* Resque 1.7.0
 
 [rq]: http://github.com/defunkt/resque
