@@ -44,17 +44,17 @@ module Resque
       # Override in your job to control the lock key. It is
       # passed the same arguments as `perform`, that is, your job's
       # payload.
-      def self.lock(*args)
+      def lock(*args)
         "lock:#{name}-#{args.to_s}"
       end
 
       # Convenience method, not used internally.
-      def self.locked?
+      def locked?
         Resque.redis.exist(lock)
       end
 
       # Where the magic happens.
-      def self.around_perform_lock(*args)
+      def around_perform_lock(*args)
         # Abort if another job has created a lock.
         return unless Resque.redis.setnx(lock, true)
 
