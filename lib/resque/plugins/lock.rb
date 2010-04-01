@@ -56,14 +56,14 @@ module Resque
       # Where the magic happens.
       def around_perform_lock(*args)
         # Abort if another job has created a lock.
-        return unless Resque.redis.setnx(lock, true)
+        return unless Resque.redis.setnx(lock(*args), true)
 
         begin
           yield
         ensure
           # Always clear the lock when we're done, even if there is an
           # error.
-          Resque.redis.del(lock)
+          Resque.redis.del(lock(*args))
         end
       end
     end
