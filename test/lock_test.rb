@@ -15,6 +15,10 @@ class Job
 end
 
 class LockTest < Test::Unit::TestCase
+  def test_lint
+    assert Resque::Plugin.lint(Resque::Plugins::Lock)
+  end
+
   def test_version
     assert_equal '1.7.0', Resque::Version
   end
