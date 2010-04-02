@@ -20,7 +20,9 @@ class LockTest < Test::Unit::TestCase
   end
 
   def test_version
-    assert_equal '1.7.0', Resque::Version
+    major, minor, patch = Resque::Version.split('.')
+    assert_equal 1, major.to_i
+    assert minor.to_i >= 7
   end
 
   def test_lock
