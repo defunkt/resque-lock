@@ -16,7 +16,9 @@ end
 
 class LockTest < Test::Unit::TestCase
   def test_lint
-    assert Resque::Plugin.lint(Resque::Plugins::Lock)
+    assert_nothing_raised do
+      Resque::Plugin.lint(Resque::Plugins::Lock)
+    end
   end
 
   def test_version
