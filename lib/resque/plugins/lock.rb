@@ -50,7 +50,7 @@ module Resque
 
       # Convenience method, not used internally.
       def locked?(*args)
-        Resque.redis.exist(lock(*args))
+        Resque.redis.exists(lock(*args))
       end
 
       # Where the magic happens.
