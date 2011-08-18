@@ -1,6 +1,6 @@
 module Resque
   module Plugins
-    # If you want only one instance of your job running at a time,
+    # If you want only one instance of your job queued at a time,
     # extend it with this module.
     #
     # For example:
@@ -15,10 +15,10 @@ module Resque
     #   end
     # end
     #
-    # While other UpdateNetworkGraph jobs will be placed on the queue,
-    # the Lock class will check Redis to see if any others are
-    # executing with the same arguments before beginning. If another
-    # is executing the job will be aborted.
+    # No other UpdateNetworkGraph jobs will be placed on the queue,
+    # the QueueLock class will check Redis to see if any others are
+    # queued with the same arguments before queueing. If another
+    # is queued the enqueue will be aborted.
     #
     # If you want to define the key yourself you can override the
     # `lock` class method in your subclass, e.g.
@@ -48,16 +48,11 @@ module Resque
         "lock:#{name}-#{args.to_s}"
       end
 
-      # Convenience method, not used internally.
-      def locked?(*args)
-        Resque.redis.exists(lock(*args))
+      def before_enqueue_lock(*args)
+        Resque.redis.setnx(lock(*args), true)
       end
 
-      # Where the magic happens.
       def around_perform_lock(*args)
-        # Abort if another job has created a lock.
-        return unless Resque.redis.setnx(lock(*args), true)
-
         begin
           yield
         ensure
@@ -69,3 +64,4 @@ module Resque
     end
   end
 end
+
