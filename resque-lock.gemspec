@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.summary           = "A Resque plugin for ensuring only one instance of your job is queued at a time."
   s.homepage          = "http://github.com/defunkt/resque-lock"
   s.email             = "chris@ozmm.org"
-  s.authors           = [ "Chris Wanstrath" ]
+  s.authors           = [ "Chris Wanstrath", "Ray Krueger" ]
   s.has_rdoc          = false
 
   s.files             = %w( README.md Rakefile LICENSE )
