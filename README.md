@@ -3,7 +3,7 @@ Resque Lock
 
 A [Resque][rq] plugin. Requires Resque 1.7.0.
 
-If you want only one instance of your job running at a time, extend it
+If you want only one instance of your job queued at a time, extend it
 with this module.
 
 
@@ -19,10 +19,8 @@ For example:
       end
     end
 
-While other UpdateNetworkGraph jobs will be placed on the queue,
-the Locked class will check Redis to see if any others are
-executing with the same arguments before beginning. If another
-is executing the job will be aborted.
+While this job is queued or running, no other UpdateNetworkGraph
+jobs with the same arguments will be placed on the queue.
 
 If you want to define the key yourself you can override the
 `lock` class method in your subclass, e.g.
@@ -41,7 +39,7 @@ If you want to define the key yourself you can override the
     end
 
 The above modification will ensure only one job of class
-UpdateNetworkGraph is running at a time, regardless of the
+UpdateNetworkGraph is queued at a time, regardless of the
 repo_id. Normally a job is locked using a combination of its
 class name and arguments.
 
