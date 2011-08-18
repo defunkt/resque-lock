@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name              = "resque-lock"
-  s.version           = "0.1.1"
+  s.version           = "1.0.0"
   s.date              = Time.now.strftime('%Y-%m-%d')
-  s.summary           = "A Resque plugin for ensuring only one instance of your job is running at a time."
+  s.summary           = "A Resque plugin for ensuring only one instance of your job is queued at a time."
   s.homepage          = "http://github.com/defunkt/resque-lock"
   s.email             = "chris@ozmm.org"
   s.authors           = [ "Chris Wanstrath" ]
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.description       = <<desc
 A Resque plugin. If you want only one instance of your job
-running at a time, extend it with this module.
+queued at a time, extend it with this module.
 
 For example:
 
