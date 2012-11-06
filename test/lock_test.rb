@@ -9,6 +9,10 @@ class LockTest < Test::Unit::TestCase
     extend Resque::Plugins::Lock
     @queue = :lock_test
 
+    def self.lock_timeout
+      1
+    end
+
     def self.perform
       raise "Woah woah woah, that wasn't supposed to happen"
     end
@@ -36,5 +40,21 @@ class LockTest < Test::Unit::TestCase
     3.times { Resque.enqueue(Job) }
 
     assert_equal 1, Resque.redis.llen('queue:lock_test')
+  end
+
+  def test_deadlock
+    now = Time.now.to_i
+
+    Resque.redis.set(Job.lock, now+60)
+    Resque.enqueue(Job)
+    assert_equal 0, Resque.redis.llen('queue:lock_test')
+
+    Resque.redis.set(Job.lock, now-1)
+    Resque.enqueue(Job)
+    assert_equal 1, Resque.redis.llen('queue:lock_test')
+
+    sleep 3
+    Resque.enqueue(Job)
+    assert_equal 2, Resque.redis.llen('queue:lock_test')
   end
 end
