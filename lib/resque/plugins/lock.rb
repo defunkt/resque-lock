@@ -41,6 +41,14 @@ module Resque
     # repo_id. Normally a job is locked using a combination of its
     # class name and arguments.
     module Lock
+
+      # Override in your job to control the lock experiation time. This is the
+      # time in seconds that the lock should be considered valid. The default
+      # is one hour (3600 seconds).
+      def lock_timeout
+        3600
+      end
+
       # Override in your job to control the lock key. It is
       # passed the same arguments as `perform`, that is, your job's
       # payload.
@@ -48,8 +56,23 @@ module Resque
         "lock:#{name}-#{args.to_s}"
       end
 
+      # See the documentation for SETNX http://redis.io/commands/setnx for an
+      # explanation of this deadlock free locking pattern
       def before_enqueue_lock(*args)
-        Resque.redis.setnx(lock(*args), true)
+        key = lock(*args)
+        now = Time.now.to_i
+        timeout = now + lock_timeout + 1
+
+        # return true if we successfully acquired the lock
+        return true if Resque.redis.setnx(key, timeout)
+
+        # see if the existing timeout is still valid and return false if it is
+        # (we cannot acquire the lock during the timeout period)
+        return false if now <= Resque.redis.get(key).to_i
+
+        # otherwise set the timeout and ensure that no other worker has
+        # acquired the lock
+        now > Resque.redis.getset(key, timeout).to_i
       end
 
       def around_perform_lock(*args)
